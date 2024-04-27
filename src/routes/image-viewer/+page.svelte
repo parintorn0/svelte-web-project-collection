@@ -1,41 +1,47 @@
 <script>
 	import Dragdrop from "./Dragdrop.svelte";
+	import { fade } from "svelte/transition";
+	let isHide;
 </script>
 
-<div class="image-viewer">
-	<div id='guide'>
-        <div id='key-guide'>Keys Function</div>
-		<div class=container>
-			<div class="grid-display">
-				<span class="one">a</span>
-				<span class="two">:</span>
-				<span class="three">See fit screen</span>
+	<div class="image-viewer">
+		{#if !isHide}
+			<div id='guide' transition:fade>
+				<div id='key-guide'>Keys Function</div>
+				<div class=container>
+					<div class="grid-display">
+						<span class="one">a</span>
+						<span class="two">:</span>
+						<span class="three">See fit screen</span>
+					</div>
+					<div class="grid-display">
+						<span class="one">s</span>
+						<span class="two">:</span>
+						<span class="three">See fit height</span>
+					</div>
+					<div class="grid-display">
+						<span class="one">d</span>
+						<span class="two">:</span>
+						<span class="three">See fit width</span>
+					</div>
+					<div class="grid-display">
+						<span class="one">f</span>
+						<span class="two">:</span>
+						<span class="three">See original</span>
+					</div>
+				</div>
 			</div>
-			<div class="grid-display">
-				<span class="one">s</span>
-				<span class="two">:</span>
-				<span class="three">See fit height</span>
-			</div>
-			<div class="grid-display">
-				<span class="one">d</span>
-				<span class="two">:</span>
-				<span class="three">See fit width</span>
-			</div>
-			<div class="grid-display">
-				<span class="one">f</span>
-				<span class="two">:</span>
-				<span class="three">See original</span>
-			</div>
-		</div>
-      </div>
-	<Dragdrop />
-</div>
+		{/if}
+		<Dragdrop bind:isHide/>
+	</div>
 
 <style>
 	.image-viewer {
 		display: flex;
 		height: 100%;
 		width: 100%;
+		max-height: 100vh;
+		max-width: 100vw;
 		background: #f5f5f5;
 		justify-content: center;
 	}
@@ -58,8 +64,14 @@
 	#key-guide{
 		text-align: center;
 		margin-bottom: 40px;
+		margin-top: 10px;
 		font-size: 25px;
 		font-weight: 800;
+	}
+
+	.container {
+		margin-left: 20px;
+		margin-bottom: 20px;
 	}
 
 	.grid-display {
@@ -81,3 +93,5 @@
 	}
 
 </style>
+
+	

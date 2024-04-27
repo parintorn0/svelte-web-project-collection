@@ -1,10 +1,12 @@
 <script>
+    import { fade } from "svelte/transition";
     let hover = false;
     let fileList=[];
     let haveImg = false;
     let currentImg='';
     let currentIndex=0;
     let isRight=true;
+    export let isHide=false;
     function handleDrop(e){
         const data=e.dataTransfer;
         const files = data.files;
@@ -36,6 +38,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="image-viewer">
+    {#if !isHide}
 	<section class="droparea {hover ? 'hover':''}"
     on:dragenter|preventDefault={()=>hover = true}
     on:dragover|preventDefault={()=>hover = true}
@@ -44,6 +47,7 @@
         hover = false;
         handleDrop(e);
         }}
+    transition:fade
     >
     {#if hover}
         <p class="drop-txt">Drop</p>
@@ -55,7 +59,7 @@
         <p class="drop-txt">here</p>
     {/if}
     </section>
-    <div class="img-nav">
+    <div class="img-nav" transition:fade>
         {#key fileList}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             {#each fileList as file, index}
@@ -67,18 +71,28 @@
             {/each}
         {/key}
     </div>
-    <img class="current" src={currentImg} alt="">
+    {/if}
+    <div class="container" on:click|preventDefault={()=>{
+        isHide=!isHide;
+    }}>
+        <img class="current" src={currentImg} alt="">
+    </div>
 </div>
 
 <style>
 	.image-viewer {
 		height: 100%;
 		width: 100%;
+		background: #f5f5f5;
+	}
+
+    .container{
+        width: 100%;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-		background: #f5f5f5;
-	}
+    }
 
     img.current {
         max-height: 100%;
@@ -98,6 +112,7 @@
         height: 70%;
         border: 4px dashed grey;
         border-radius: 15px;
+        transition: margin 0.2s;
     }
 
     .droparea.hover {
@@ -124,8 +139,8 @@
     
     .img-list {
         margin: 30px;
-        min-height: 150px;
-        min-width: 150px;
+        width: 150px;
+        height: 150px;
         object-fit: contain;
         border: 3px solid rgba(17,17,17,1);
         border-radius: 35px;
@@ -158,7 +173,6 @@
 </style>
 
 <svelte:window on:keydown|preventDefault={(e)=>{
-    console.log(e.code);
     function goLeft() {
         if(currentIndex>0){
             currentIndex--;
@@ -186,10 +200,10 @@
     if(e.code==='ArrowLeft' || e.code==='ArrowUp'){
         goLeft();
     }
-    if(e.code==='ArrowRight' || e.code==='ArrowDown'){
+    else if(e.code==='ArrowRight' || e.code==='ArrowDown'){
         goRight();
     }
-    if(e.code==='Space'){
+    else if(e.code==='Space'){
         if(isRight){
             goRight();
         }
@@ -197,7 +211,12 @@
             goLeft();
         }
     }
+    else if(e.code==='Escape'){
+        isHide=true;
+    }
+    else if(e.code==='Tab'){
+        isHide=!isHide;
+    }
+    
 }}
 />
-
-
