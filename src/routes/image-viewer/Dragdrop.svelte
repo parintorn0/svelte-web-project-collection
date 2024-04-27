@@ -7,6 +7,12 @@
     let currentIndex=0;
     let isRight=true;
     export let isHide=false;
+    let size={
+        'screen':true,
+        'height':false,
+        'width':false,
+        'original':false,
+    }
     function handleDrop(e){
         const data=e.dataTransfer;
         const files = data.files;
@@ -72,10 +78,20 @@
         {/key}
     </div>
     {/if}
-    <div class="container" on:click|preventDefault={()=>{
+    <div class="container"
+    class:screen={size.screen}
+    class:height={size.height}
+    class:width={size.width}
+    on:click|preventDefault={()=>{
         isHide=!isHide;
     }}>
-        <img class="current" src={currentImg} alt="">
+        <div></div>
+        <img class="current"
+        class:screen={size.screen}
+        class:height={size.height}
+        class:width={size.width}
+        src={currentImg} alt="">
+        <div></div>
     </div>
 </div>
 
@@ -90,13 +106,26 @@
         width: 100%;
         height: 100%;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: space-between;
+        align-content:space-between;
+        overflow-y: auto;
+        flex-direction: column-reverse;
     }
-
-    img.current {
+    .container::-webkit-scrollbar{
+        display: none;
+    }
+    img.current{
+        margin: auto;
+    }
+    img.current.screen {
         max-height: 100%;
         max-width: 100%;
+    }
+    img.current.height {
+        height: 100%;
+    }
+    img.current.width {
+        width: 100%;
     }
 
     .droparea {
@@ -172,7 +201,9 @@
     }
 </style>
 
-<svelte:window on:keydown|preventDefault={(e)=>{
+<svelte:window 
+on:keydown|preventDefault={(e)=>{
+    console.log(e)
     function goLeft() {
         if(currentIndex>0){
             currentIndex--;
@@ -217,6 +248,25 @@
     else if(e.code==='Tab'){
         isHide=!isHide;
     }
-    
+    else if(e.code==='KeyA'){
+        size.screen=true;
+        size.height=false;
+        size.width=false;
+    }
+    else if(e.code==='KeyS'){
+        size.screen=false;
+        size.height=true;
+        size.width=false;
+    }
+    else if(e.code==='KeyD'){
+        size.screen=false;
+        size.height=false;
+        size.width=true;
+    }
+    else if(e.code==='KeyF'){
+        size.screen=false;
+        size.height=false;
+        size.width=false;
+    }
 }}
 />
