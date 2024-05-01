@@ -37,47 +37,41 @@
 
 <style>
 	.image-viewer {
-		display: flex;
 		height: 100%;
-		width: 100%;
-		max-height: 100vh;
-		max-width: 100vw;
-		background: #f5f5f5;
+		display: flex;
 		justify-content: center;
 	}
 	#guide {
-		top: -60px;
-		position: absolute;
-		z-index: 1;
-		padding: 20px;
-		padding-top: 70px;
-		background-color: rgba(0, 0, 0, 0.5);
+		position: fixed;
+		background-color: rgba(0, 0, 0, 0.7);
 		color: rgb(240, 240, 240);
-		border-radius: 50px;
+		border-radius: 0 0 50px 50px ;
 		font-weight: 600;
-		width: 300px;
+		width: 15%;
+		height: 16%;
+		font-family: Arial, Helvetica, sans-serif;
+		padding: 5px 20px 10px 20px;
 		display: flex;
 		flex-direction: column;
-		font-family: Arial, Helvetica, sans-serif;
+		justify-content: space-around;
+		align-items: center;
 	}
 
 	#key-guide{
-		text-align: center;
-		margin-bottom: 40px;
-		margin-top: 10px;
-		font-size: 25px;
+		font-size: 20px;
 		font-weight: 800;
 	}
 
 	.container {
-		margin-left: 20px;
-		margin-bottom: 20px;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.grid-display {
-		font-size: 20px;
+		padding: 3px;
+		font-size: 18px;
 		display: grid;
-		grid-template-columns: 20px 20px 160px;
+		grid-template-columns: 30px 30px 180px;
 	}
 	.one{
 		grid-column-start: 1;

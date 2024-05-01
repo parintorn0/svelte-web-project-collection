@@ -1,5 +1,6 @@
 <script>
     import { fade } from "svelte/transition";
+    import { FileButton } from '@skeletonlabs/skeleton';
     let hover = false;
     let fileList=[];
     let haveImg = false;
@@ -56,13 +57,29 @@
     transition:fade
     >
     {#if hover}
-        <p class="drop-txt">Drop</p>
-        <p class="drop-txt">Now</p>
+        <div class="drop-txt">Drop</div>
+        <div class="drop-txt">Now</div>
     {:else}
-        <p class="drop-txt">Drop</p>
-        <p class="drop-txt">your</p>
-        <p class="drop-txt">Image</p>
-        <p class="drop-txt">here</p>
+        <div class="drop-txt">Drop</div>
+        <div class="drop-txt">your</div>
+        <div class="drop-txt">Image</div>
+        <div class="drop-txt">here</div>
+        <div class="drop-txt-container">
+            <span class="drop-txt">or</span>
+            <FileButton name="files" button="btn variant-soft-primary" on:change={(e)=>{
+                const files = e.target.files;
+                const fileArray=[...files];
+                for(let i=0;i<fileArray.length;i++){
+                    fileList = [...fileList,{'url':URL.createObjectURL(fileArray[i]), 'type':fileArray[i].type}];
+                }
+                if(!haveImg){
+                    currentImg=fileList[0].url;
+                    currentIndex=0;
+                    haveImg=true;
+                }
+            }}>Browse</FileButton>
+        </div>
+        
     {/if}
     </section>
     <div class="img-nav" transition:fade>
@@ -71,7 +88,7 @@
             {#each fileList as file, index}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <img class="img-list"
-                class:select={index===currentIndex} src={file.url} alt="" on:click={()=>{currentImg=file.url; currentIndex=index}}>
+                class:selected={index===currentIndex} src={file.url} alt="" on:click={()=>{currentImg=file.url; currentIndex=index}}>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <span class="remove" on:click={()=>remove(index)}>&times</span>
             {/each}
@@ -97,9 +114,13 @@
 
 <style>
 	.image-viewer {
+        font-family: Arial, Helvetica, sans-serif;
 		height: 100%;
 		width: 100%;
 		background: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 	}
 
     .container{
@@ -129,54 +150,60 @@
     }
 
     .droparea {
-        position: absolute;
-        right: 0;
-        top: 0;
-        margin: 1%;
+        position: fixed;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 10%;
-        height: 70%;
-        border: 4px dashed grey;
+        justify-content: space-evenly;
+        align-content: space space-evenly;
+        width: 20%;
+        height: 22%;    
+        border: 4px dashed rgba(17,17,17,1);
         border-radius: 15px;
-        transition: margin 0.2s;
+        background-color: rgb(245,245,245,0.5);
+        flex-wrap: wrap;
     }
 
     .droparea.hover {
-        background-color: rgba(17,17,17,0.5);
+        background-color: rgba(17,17,17,0.8);
         border: 4px solid rgba(17,17,17,1);
     }
 
     .drop-txt{
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: x-large;
+        text-align: center;
+        font-size: 25px;
         font-weight: 800;
-        margin: 1rem;
+    }
+
+    .drop-txt-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .img-nav {
         bottom: 0;
-        position: absolute;
-        height: 25%;
+        position: fixed;
+        height: 20%;
         width: 100%;
         display: flex;
+        justify-content: flex-start;
+        align-content: center;
         background-color: rgba(17,17,17,0.5);
         overflow-x: scroll;
     }
     
     .img-list {
-        margin: 30px;
-        width: 150px;
-        height: 150px;
+        margin: 25px 25px 0 25px;
+        height: 80%;
+        aspect-ratio: 1/1;
         object-fit: contain;
         border: 3px solid rgba(17,17,17,1);
         border-radius: 35px;
         background-color: #f5f5f5;
     }
 
-    .img-list.select{
+    .img-list.selected{
         border: 3px solid green;
     }
 
@@ -203,7 +230,6 @@
 
 <svelte:window 
 on:keydown|preventDefault={(e)=>{
-    console.log(e)
     function goLeft() {
         if(currentIndex>0){
             currentIndex--;
